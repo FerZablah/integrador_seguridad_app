@@ -1,27 +1,29 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 
 const slides = [
     {
         key: '1',
         title: 'Envía mensajes de alerta con audio y localización a todos tus contactos.',
-        text: 'Description.\nSay something cool',
-        image: require('../assets/photo.jpg'),
+        image: require('../assets/pictures/1.png'),
         backgroundColor: '#59b2ab',
     },
     {
-        key: 'somethun-dos',
-        title: 'Title 2',
-        text: 'Other cool stuff',
-        image: require('../assets/photo.jpg'),
+        key: '2',
+        title: 'Registra los accesorios que más te gusten.',
+        image: require('../assets/pictures/2.png'),
         backgroundColor: '#febe29',
     },
     {
-        key: 'somethun1',
-        title: 'Rocket guy',
-        text: 'I\'m already out of descriptions\n\nLorem ipsum bla bla bla',
-        image: require('../assets/photo.jpg'),
+        key: '3',
+        title: 'Envía tu localización en todo momento.',
+        image: require('../assets/pictures/3.png'),
+        backgroundColor: '#22bcb5',
+    },{
+        key: '4',
+        title: 'Alerta a las autoridadesdonde quiera que estés.',
+        image: require('../assets/pictures/4.png'),
         backgroundColor: '#22bcb5',
     }
 ];
@@ -37,7 +39,7 @@ class Example extends React.Component {
         return (
             <View style={styles.slide}>
                 <Text style={styles.title}>{item.title}</Text>
-                <Image source={item.image} />
+                <Image style={styles.image} source={item.image} />
             </View>
         );
     }
@@ -48,22 +50,15 @@ class Example extends React.Component {
     }
     _renderSkip = () => {
         return(
-            <View style={{ padding: 10}}>
-                <Text style={{color: 'black'}}> Saltar </Text>
+            <View style={styles.skipButtonStyle.view}>
+                <Text style={styles.skipButtonStyle.text}> Saltar </Text>
             </View>
         )
     }
     _renderNext = () => {
-        /*return(
-            <TouchableNativeFeedback style={{marginBottom: 400}}>
-                <View style={{borderColor: 'black', borderWidth: 2}}>
-                    <Text style={{ margin: 30 }}>{'Button'}</Text>
-                </View>
-            </TouchableNativeFeedback>
-        )*/
         return(
-            <View style={{borderColor: 'black', borderWidth: 2, borderRadius: 7, padding: 10}}>
-                <Text style={{color: 'black'}}> Siguiente </Text>
+            <View style={styles.nextButtonStyle.view}>
+                <Text style={styles.nextButtonStyle.text}> Siguiente </Text>
             </View>
         )
     }
@@ -72,28 +67,35 @@ class Example extends React.Component {
             return <App />;
         } else {
             const {dotStyle, activeDotStyle, buttonTextStyle } = styles;
-            return <AppIntroSlider
-                        showSkipButton 
-                        renderItem={this._renderItem} 
-                        slides={slides} 
-                        activeDotStyle={activeDotStyle}
-                        dotStyle={dotStyle}
-                        onDone={this._onDone} 
-                        renderSkipButton={this._renderSkip}
-                        renderNextButton={this._renderNext}
-                    />;
+            return (
+                    <View style={{flex: 1, backgroundColor: 'white'}}>
+                        <AppIntroSlider
+                            showSkipButton 
+                            renderItem={this._renderItem} 
+                            slides={slides} 
+                            activeDotStyle={activeDotStyle}
+                            dotStyle={dotStyle}
+                            onDone={this._onDone} 
+                            renderSkipButton={this._renderSkip}
+                            renderNextButton={this._renderNext}
+                            renderDoneButton={this._renderNext}
+                        />
+                    </View>
+            )
         }
     }
 }
 const styles = {
     image: {
-        width: 100,
-        height: 100,
+        width: '110%',
+        height: undefined,
+        aspectRatio: 3/2,
         backgroundColor: 'blue',
     },
     title: {
         fontSize: 22,
-        color: 'black',
+        fontFamily: "Poppins-Bold",
+        color: '#191919',
         backgroundColor: 'transparent',
         textAlign: 'left',
         marginBottom: '50%',
@@ -104,7 +106,7 @@ const styles = {
         alignItems: 'center',
     },
     activeDotStyle: {
-        backgroundColor: 'black'
+        backgroundColor: '#191919'
     },
     dotStyle: {
         backgroundColor: 'white',
@@ -112,9 +114,26 @@ const styles = {
     },
     nextButtonStyle: {
         view: {
-            borderColor: 'black'
+            borderColor: '#191919',
+            borderWidth: 2,
+            borderRadius: 7,
+            padding: 10
         },
-        textColor: 'black',
+        text: { 
+            color: '#191919',
+            fontSize: 14,
+            fontFamily: "Poppins-Bold"
+        }
+    },
+    skipButtonStyle: {
+        text: {
+            color: '#191919',
+            fontSize: 14,
+            fontFamily: "Poppins-Light"
+        },
+        view: {
+            padding: 10
+        }
     }
 };
 export default Example;
