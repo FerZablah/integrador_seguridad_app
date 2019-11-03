@@ -7,9 +7,10 @@ import {AppRegistry} from 'react-native';
 import BLETest from './components/bleTest';
 import Example from './components/walkthrough';
 import RegisterForm from './components/registerForm';
+import Home from './components/home';
 import {name as appName} from './app.json';
 
-AppRegistry.registerComponent(appName, () => RegisterForm);
+AppRegistry.registerComponent(appName, () => Home);
 
 
 
