@@ -11,7 +11,30 @@ import Home from './components/home';
 import Contacts from './components/contacts';
 import {name as appName} from './app.json';
 
-AppRegistry.registerComponent(appName, () => Contacts);
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+
+const AppNavigator = createStackNavigator({
+    Intro: {
+        screen: Example,
+    },
+    RegisterForm: {
+        screen: RegisterForm
+    },
+    Home: {
+        screen: Home
+    },
+    Contacts: {
+        screen: Contacts
+    }
+  }, {
+    headerMode: 'none',
+    navigationOptions: {
+        headerVisible: false,
+    }
+  });
+
+AppRegistry.registerComponent(appName, () => createAppContainer(AppNavigator));
 
 
 

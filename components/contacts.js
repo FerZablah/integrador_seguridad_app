@@ -19,7 +19,7 @@ class Contacts extends Component {
                 </View>
                 <View style={{ flexDirection: 'row', height: '10%' }}>
                     <View style={{ height: '100%', width: '17%', alignItems: 'center', justifyContent: 'center' }}>
-                        <Icon name="chevron-left" size={20} color="black" solid />
+                        <Icon onPress={() => this.props.navigation.pop()}name="chevron-left" size={20} color="black" solid />
                     </View>
                     <View style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 0 }}>
                         <Text style={styles.header}>

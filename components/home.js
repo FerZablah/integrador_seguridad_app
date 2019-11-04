@@ -47,7 +47,7 @@ class Home extends Component {
         </View>
         <View style={styles.buttonsViews}>
           <View>
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Contacts')}>
               <View style={styles.button}>
                 <Material name="phone-plus" size={40}color="black" solid/>
                 <Text style={styles.buttonText}>Contactos de emergencia</Text>

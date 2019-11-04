@@ -40,7 +40,7 @@ class RegisterForm extends Component {
                     </View>
                 </KeyboardAwareScrollView>
                 <View style={styles.buttonView}> 
-                    <TouchableNativeFeedback>
+                    <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Home')}>
                         <View style={styles.button}>   
                             <Text style={styles.buttonText}>Continuar</Text>
                         </View>

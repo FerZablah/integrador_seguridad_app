@@ -44,9 +44,7 @@ class Example extends React.Component {
         );
     }
     _onDone = () => {
-        // User finished the introduction. Show real app through
-        // navigation or simply by controlling state
-        this.setState({ showRealApp: true });
+        this.props.navigation.navigate('RegisterForm');
     }
     _renderSkip = () => {
         return(
