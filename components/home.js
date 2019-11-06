@@ -55,7 +55,7 @@ class Home extends Component {
             </TouchableNativeFeedback>
           </View>
           <View>
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Accessories')}>
               <View style={styles.button}>
                 <Material name="ring" size={40}color="black" solid/>
                 <Text multiline style={styles.buttonText}>Accesorios</Text>

@@ -1,11 +1,28 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableNativeFeedback } from 'react-native';
+import { View, Text, TextInput, TouchableNativeFeedback, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ContactsTable from './contactsTable';
+import NewContact from './newContact';
 class Contacts extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { 
+            showNewUser: false
+        };
+      }
     render() {
         return (
             <View style={{ backgroundColor: 'white', flex: 1 }}>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.showNewUser}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}
+                >
+                    <NewContact close={() => this.setState({showNewUser: false})}/>
+                </Modal>
                 <View style={{ alignItems: 'center', width: '40%', height: '10%', marginLeft: 30 }}>
                     <View style={styles.profileView}>
                         <View style={styles.iconContainer}>
@@ -40,7 +57,7 @@ class Contacts extends Component {
                         </TouchableNativeFeedback>
                     </View>
                     <View style={styles.buttonView}>
-                        <TouchableNativeFeedback>
+                        <TouchableNativeFeedback onPress={() => this.setState({showNewUser: true})}>
                             <Icon name="plus" size={20} color="black" solid />
                         </TouchableNativeFeedback>
                     </View>
