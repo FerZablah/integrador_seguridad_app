@@ -22,18 +22,20 @@ const styles = {
         flexDirection: 'row',
         height: 80,
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-around',
+        width: '100%'
     },
     label: {
-        fontSize: 15,
+        fontSize: 12,
         fontFamily: "Poppins-Regular",
         color: '#191919',
         backgroundColor: 'transparent',
-        textAlign: 'left'
+        textAlign: 'left',
+        width: '50%'
     },
     input: {
-        width: 180,
-        fontSize: 13,
+        width: '50%',
+        fontSize: 11,
         fontFamily: "Poppins-Regular",
         color: '#191919',
         textAlign: 'left',

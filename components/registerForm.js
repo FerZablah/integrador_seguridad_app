@@ -11,7 +11,7 @@ class RegisterForm extends Component {
                 </Text>
                 <Image style={styles.image} source={ require('../assets/pictures/5.png')} />
                 <KeyboardAwareScrollView>
-                    <View style={{justifyContent: 'space-around'}}>
+                    <View style={{justifyContent: 'center', flex: 1}}>
                         <RegisterInput 
                             label={'Nombre'}
                             placeholder={'Ej: Andrea'}
