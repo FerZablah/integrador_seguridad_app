@@ -12,6 +12,7 @@ class RegisterInput extends Component {
                     placeholder={this.props.placeholder}
                     keyboardType={this.props.keyboardType}
                     secureTextEntry={this.props.secureTextEntry}
+                    onChangeText={(txt) => this.props.onChangeText(txt)}
                 />
             </View>
         );

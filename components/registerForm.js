@@ -1,8 +1,73 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TouchableNativeFeedback } from 'react-native';
+import { View, Text, Image, TouchableNativeFeedback, Alert, AsyncStorage } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import RegisterInput from './registerInput';
+import emailRegex from 'email-regex';
+import firebase from 'react-native-firebase';
+import axios from 'axios';
+
 class RegisterForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { 
+            password: '',
+            confirmPassword: '',
+            mail: '',
+            phone: '',
+            name: ''
+        };
+    }
+    showAlert(title, message){
+        Alert.alert(
+            title,
+            message,
+            [
+              {text: 'Okey'},
+            ],
+            {cancelable: false},
+          );
+    }
+    formIsValid(){
+        const { mail, password, confirmPassword, name, phone } = this.state;
+        if(name.replace(' ', '').length < 2){
+            this.showAlert('Nombre inválido', 'Ingrese un nombre de al menos 2 caracteres');
+            return false;
+        }
+        if(!emailRegex({exact: true}).test(mail)){
+            this.showAlert('Correo inválido', 'Ingrese un correo válido');
+            return false;
+        }
+        if(phone.length < 10){
+            this.showAlert('Teléfono inválido', 'Ingrese un número de teléfono válido');
+            return false;
+        }
+        if(password.length < 6){
+            this.showAlert('Contraseña inválida', 'Ingrese una contraseña de al menos 6 caracteres');
+            return false;
+        }
+        if(password !== confirmPassword){
+            this.showAlert('Contraseñas no son iguales', 'Ingrese en los dos campos la misma contraseña');
+            return false;
+        }
+        return true;
+    }
+    signup(){
+        if(this.formIsValid()){
+            const { mail, password, name, phone } = this.state;
+            firebase.auth().createUserWithEmailAndPassword(mail, password).then((res) => {
+                axios.post(`http://localhost:4000/usuario`, {
+                    name,
+                    mail,
+                    uid: res.user.uid,
+                    phone
+                }).then((res) =>{
+                    AsyncStorage.setItem('name', res.name);
+                }).catch((e) => {
+                    console.log(e);
+                });
+            });
+        }
+    }
     render(){
         return(
             <View style={styles.root}>
@@ -15,32 +80,41 @@ class RegisterForm extends Component {
                         <RegisterInput 
                             label={'Nombre'}
                             placeholder={'Ej: Andrea'}
-                            
+                            value={this.state.name}
+                            onChangeText={(txt) => this.setState({name: txt})}
                         />    
                         <RegisterInput 
                             label={'Correo'}
                             placeholder={'Ej: andrea@gmail.com'}
                             keyboardType={'email-address'}
+                            value={this.state.mail}
+                            onChangeText={(txt) => this.setState({mail: txt})}
                         />
                         <RegisterInput 
                             label={'Télefono'}
                             placeholder={'Ej: 811 123 4567'}
                             keyboardType={'phone-pad'}
+                            value={this.state.phone}
+                            onChangeText={(txt) => this.setState({phone: txt})}
                         />
                         <RegisterInput 
                             label={'Contraseña'}
                             placeholder={''}
                             secureTextEntry
+                            value={this.state.password}
+                            onChangeText={(txt) => this.setState({password: txt})}
                         />
                         <RegisterInput 
                             label={'Repetir contraseña'}
                             placeholder={''}
                             secureTextEntry
+                            value={this.state.confirmPassword}
+                            onChangeText={(txt) => this.setState({confirmPassword: txt})}
                         />
                     </View>
                 </KeyboardAwareScrollView>
                 <View style={styles.buttonView}> 
-                    <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Home')}>
+                    <TouchableNativeFeedback onPress={this.signup.bind(this)}>
                         <View style={styles.button}>   
                             <Text style={styles.buttonText}>Continuar</Text>
                         </View>

@@ -38,7 +38,7 @@ const AppNavigator = createStackNavigator({
   });
 
 //AppRegistry.registerComponent(appName, () => createAppContainer(AppNavigator));
-AppRegistry.registerComponent(appName, () => Login);
+AppRegistry.registerComponent(appName, () => RegisterForm);
 
 
 //adb shell input text "RR"
