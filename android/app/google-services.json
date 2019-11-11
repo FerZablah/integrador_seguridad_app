@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "926864505804",
+    "firebase_url": "https://integrador-seguridad.firebaseio.com",
+    "project_id": "integrador-seguridad",
+    "storage_bucket": "integrador-seguridad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926864505804:android:c1807d60e5eba0d9cefb69",
+        "android_client_info": {
+          "package_name": "com.integrador_seguridad_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926864505804-j16rf0uudeqdql0nri3qqteoqsa6rvo7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPiif_QQg9gDbc-MKDYHQ8WyII4P54YQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926864505804-j16rf0uudeqdql0nri3qqteoqsa6rvo7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

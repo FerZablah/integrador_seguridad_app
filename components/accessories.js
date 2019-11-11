@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Image, TouchableNativeFeedback } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableNativeFeedback, Modal } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import NewAccessory from './newAccessory';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class Accessories extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { 
+            showNewAccessory: false
+        };
+      }
     renderAccessory() {
         return (
           <View style={styles.cardContainer}>
@@ -17,6 +25,16 @@ class Accessories extends Component {
     render(){
         return(
             <View style={{flex: 1, backgroundColor: 'white'}}>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.showNewAccessory}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}
+                >
+                    <NewAccessory close={() => this.setState({showNewAccessory: false})}/>
+                </Modal>
                 <View style={{ alignItems: 'center', width: '40%', height: '10%', marginLeft: 30 }}>
                     <View style={styles.profileView}>
                         <View style={styles.iconContainer}>
@@ -49,12 +67,23 @@ class Accessories extends Component {
                         {this.renderAccessory()}
                     </ScrollView>
                 </View>
-                <View style={styles.buttonView}> 
-                    <TouchableNativeFeedback>
-                        <View style={styles.button}>   
-                            <Text style={styles.buttonText}>Vincular nuevo accesorio</Text>
+                <View style={styles.buttonsViews}>
+                    <View style={{flex: 1, alignItems: 'center'}}>
+                        <TouchableNativeFeedback onPress={() => this.setState({showNewAccessory: true})}>
+                        <View style={styles.button}>
+                            <Material name="qrcode-scan" size={35}color="black" solid/>
+                            <Text style={styles.buttonText}>Añadir accesorio (QR)</Text>
                         </View>
-                    </TouchableNativeFeedback>
+                        </TouchableNativeFeedback>
+                    </View>
+                    <View style={{flex: 1, alignItems: 'center'}}>
+                        <TouchableNativeFeedback onPress={() => this.setState({showNewAccessory: true})}>
+                        <View style={styles.button}>
+                            <Material name="bluetooth" size={35}color="black" solid/>
+                            <Text multiline style={styles.buttonText}>Añadir accesorio (Bluetooth)</Text>
+                        </View>
+                        </TouchableNativeFeedback>
+                    </View>
                 </View>
             </View>
         );
@@ -132,14 +161,14 @@ const styles = {
     button: {
         borderRadius: 12,
         borderWidth: 1,
-        width: '40%',
-        height: 50,
+        width: '50%',
+        height: '50%',
         borderColor: 'black',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     buttonText: {
-        fontSize: 14,
+        fontSize: 12,
         fontFamily: "Poppins-Bold",
         color: '#191919',
         backgroundColor: 'transparent',
@@ -149,6 +178,12 @@ const styles = {
         alignItems: 'center',
         width: '100%',
         marginTop: 20
+    },
+    buttonsViews: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
     },
 };
 export default Accessories;

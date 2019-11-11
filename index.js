@@ -10,11 +10,10 @@ import RegisterForm from './components/registerForm';
 import Home from './components/home';
 import Contacts from './components/contacts';
 import {name as appName} from './app.json';
-import NewContact from './components/newContact';
+import Login from './components/login';
 import Accessories from './components/accessories';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-
 const AppNavigator = createStackNavigator({
     Intro: {
         screen: Example,
@@ -38,8 +37,8 @@ const AppNavigator = createStackNavigator({
     }
   });
 
-AppRegistry.registerComponent(appName, () => createAppContainer(AppNavigator));
-//AppRegistry.registerComponent(appName, () => Accessories);
+//AppRegistry.registerComponent(appName, () => createAppContainer(AppNavigator));
+AppRegistry.registerComponent(appName, () => Login);
 
 
 //adb shell input text "RR"
