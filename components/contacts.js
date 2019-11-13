@@ -3,17 +3,43 @@ import { View, Text, TextInput, TouchableNativeFeedback, Modal, AsyncStorage } f
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ContactsTable from './contactsTable';
 import NewContact from './newContact';
+import firebase from 'react-native-firebase';
+import axios from 'axios';
 class Contacts extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             showNewUser: false,
-            name: ''
+            name: '',
+            contacts: [],
+            userToModify: undefined
         };
+    }
+    addUser(user){
+        const newContacts = this.state.contacts;
+        newContacts.push(user);
+        this.setState({contacts: newContacts});
+    }
+    modifyUser(newUser, oldUser){
+        let newContacts = this.state.contacts;
+        console.log('old:', oldUser);
+        console.log('new:', newUser);
+        newContacts = newContacts.filter(( obj ) => {
+            console.log('comparing to:', obj.telefono);
+            return obj.telefono !== oldUser.telefono;
+        });
+        newContacts.push(newUser);
+        console.log(newContacts);
+        this.setState({contacts: newContacts});
     }
     componentDidMount(){
         AsyncStorage.getItem('name', (err, val) => {
             this.setState({ name: val });
+        });
+        axios.get('http://localhost:4000/contacto/'+firebase.auth().currentUser.uid).then((res) => {
+            this.setState({contacts: res.data});
+        }).catch((e) => {
+            console.log(e);
         })
     }
     render() {
@@ -27,7 +53,12 @@ class Contacts extends Component {
                         Alert.alert('Modal has been closed.');
                     }}
                 >
-                    <NewContact close={() => this.setState({showNewUser: false})}/>
+                    <NewContact 
+                        modifyUser={this.modifyUser.bind(this)}
+                        addUser={this.addUser.bind(this)}
+                        close={() => this.setState({showNewUser: false})}
+                        userToModify={this.state.userToModify}
+                    />
                 </Modal>
                 <View style={{ alignItems: 'center', width: '40%', height: '10%', marginLeft: 30 }}>
                     <View style={styles.profileView}>
@@ -68,7 +99,12 @@ class Contacts extends Component {
                         </TouchableNativeFeedback>
                     </View>
                 </View>
-                <ContactsTable />
+                <ContactsTable
+                    setUserToModify={(user) => {
+                        this.setState({userToModify: user, showNewUser: true});
+                    }}
+                    contacts={this.state.contacts}
+                />
             </View>
         );
     }

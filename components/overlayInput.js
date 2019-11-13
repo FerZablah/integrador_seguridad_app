@@ -9,6 +9,8 @@ class OverlayInput extends Component {
                 </Text>
                 <TextInput
                     style={styles.input}
+                    value={this.props.value}
+                    onChangeText={(txt) => this.props.changeTxt(txt)}
                     placeholder={this.props.placeholder}
                     keyboardType={this.props.keyboardType}
                     secureTextEntry={this.props.secureTextEntry}

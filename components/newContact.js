@@ -1,9 +1,48 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableNativeFeedback } from 'react-native';
 import OverlayInput from './overlayInput';
-
+import firebase from 'react-native-firebase';
+import axios from 'axios';
 class NewContact extends Component {
+    constructor(props) {
+        super(props);
+        console.log(props);
+        this.state = { 
+            name: props.userToModify.nombre,
+            phone: props.userToModify.telefono
+        };
+    }
+    createContact(){
+        axios.post('http://localhost:4000/contacto/', {
+            uid: firebase.auth().currentUser.uid,
+            phone: this.state.phone,
+            name: this.state.name
+        }).then((res) => {
+            this.props.addUser(res.data);
+            this.props.close();
+        }).catch((e) => {
+            //Handle duplicate number
+            console.log(e);
+        })
+    }
+    modifyContact(){
+        axios.put('http://localhost:4000/contacto/', {
+            old_phone: this.props.userToModify.telefono,
+            phone: this.state.phone,
+            name: this.state.name
+        }).then((res) => {
+            this.props.modifyUser(res.data, this.props.userToModify);
+            this.props.close();
+        }).catch((e) => {
+            //Handle duplicate number
+            console.log(e);
+        })
+    }
     render(){
+        const addFromPhone = this.props.userToModify ?    
+            <Text style={styles.link}>
+                O agrega desde tu dispositivo
+            </Text> : null;
         return(
             <View style={{ flex: 1, alignItems: 'center', padding: 10}}>
                 <Text style={styles.header}>
@@ -12,19 +51,24 @@ class NewContact extends Component {
                 <Text style={styles.label}>
                     Nombre completo o alias
                 </Text>
-                <OverlayInput/>
+                <OverlayInput
+                    changeTxt={(txt) => this.setState({name: txt})}
+                    value={this.state.name}
+                />
                 <Text style={styles.label}>
                     Télefono
                 </Text>
-                <OverlayInput keyboardType={'number-pad'}/>
+                <OverlayInput 
+                    keyboardType={'number-pad'}
+                    value={this.state.phone}
+                    changeTxt={(txt) => this.setState({phone: txt})}
+                />
                 <View
                     style={{
                         height: 50
                     }}
                 />
-                <Text style={styles.link}>
-                    O agrega desde tu dispositivo
-                </Text>
+                {addFromPhone}
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                     <View style={styles.buttonView}> 
                         <TouchableNativeFeedback  onPress={() => this.props.close()}>
@@ -34,9 +78,9 @@ class NewContact extends Component {
                         </TouchableNativeFeedback>
                     </View>
                     <View style={styles.buttonView}> 
-                        <TouchableNativeFeedback onPress={() => this.props.close()}>
+                        <TouchableNativeFeedback onPress={() => !this.props.userToModify ? this.createContact() : this.modifyContact()}>
                             <View style={styles.button}>   
-                                <Text style={styles.buttonText}>Agregar</Text>
+                                <Text style={styles.buttonText}>{!this.props.userToModify ? 'Agregar' : 'Modificar'}</Text>
                             </View>
                         </TouchableNativeFeedback>
                     </View>
