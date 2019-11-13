@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native';
+
 class RegisterInput extends Component {
     render(){
         return(
@@ -9,8 +10,10 @@ class RegisterInput extends Component {
                 </Text>
                 <TextInput
                     style={styles.input}
+                    autoCapitalize={this.props.autoCapitalize}
                     placeholder={this.props.placeholder}
                     keyboardType={this.props.keyboardType}
+                    value={this.props.value}
                     secureTextEntry={this.props.secureTextEntry}
                     onChangeText={(txt) => this.props.onChangeText(txt)}
                 />

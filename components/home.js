@@ -1,18 +1,28 @@
 import React, { Component } from "react";
-import { View, Text, TouchableNativeFeedback } from "react-native";
+import { View, Text, TouchableNativeFeedback, AsyncStorage } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import mapStyle from '../assets/mapStyle.json'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import Modal from "react-native-modal";
+import firebase from 'react-native-firebase';
+
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showLogout: false,
+      name: ''
+    };
   }
-  componentWillMount(){
+  componentDidMount(){
+    AsyncStorage.getItem('name', (err, val) => {
+        this.setState({ name: val });
+    })
+  }
+  componentWillMount() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log(position);
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
@@ -22,8 +32,13 @@ class Home extends Component {
       { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
     );
   }
+  signOut(){
+    this.setState({showLogout: false});
+    firebase.auth().signOut().then(() => {
+      AsyncStorage.removeItem('name');
+    });
+  }
   render() {
-    console.log(this.state);
     return (
       <View style={{ flex: 1 }}>
         <MapView
@@ -38,18 +53,31 @@ class Home extends Component {
             longitudeDelta: 0.0121
           }}
         ></MapView>
-        <View style={styles.profileView}>
-          <View style={styles.iconContainer}>
-            <Icon name="user" size={15}color="black" solid/>
-          </View>  
-          <Text style={styles.nameText}>Andrea</Text>
-          <Text style={styles.locationText}>Monterrey, México</Text>
-        </View>
+        <Modal isVisible={this.state.showLogout}>
+          <View style={{ justifyContent: 'flex-end', flex: 1 }}>
+            <View style={{ backgroundColor: 'white', width: '100%', height: 100, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+              <TouchableNativeFeedback onPress={() => this.signOut()}>
+                <View style={styles.popbutton}>
+                  <Text style={styles.popbuttonText}>Cerrar sesión</Text>
+                </View>
+              </TouchableNativeFeedback>
+            </View>
+          </View>
+        </Modal>
+        <TouchableNativeFeedback onPress={() => this.setState({ showLogout: true })}>
+          <View style={styles.profileView}>
+              <View style={styles.iconContainer}>
+                <Icon name="user" size={15} color="black" solid />
+              </View>
+              <Text style={styles.nameText}>{this.state.name}</Text>
+              <Text style={styles.locationText}>Monterrey, México</Text>
+          </View>
+        </TouchableNativeFeedback>
         <View style={styles.buttonsViews}>
           <View>
             <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Contacts')}>
               <View style={styles.button}>
-                <Material name="phone-plus" size={40}color="black" solid/>
+                <Material name="phone-plus" size={40} color="black" solid />
                 <Text style={styles.buttonText}>Contactos de emergencia</Text>
               </View>
             </TouchableNativeFeedback>
@@ -57,7 +85,7 @@ class Home extends Component {
           <View>
             <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Accessories')}>
               <View style={styles.button}>
-                <Material name="ring" size={40}color="black" solid/>
+                <Material name="ring" size={40} color="black" solid />
                 <Text multiline style={styles.buttonText}>Accesorios</Text>
               </View>
             </TouchableNativeFeedback>
@@ -118,6 +146,14 @@ const styles = {
     textAlign: 'center',
     width: 100
   },
+  popbuttonText: {
+    fontSize: 14,
+    fontFamily: "Poppins-Regular",
+    color: 'red',
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+    width: '100%'
+  },
   buttonsViews: {
     flex: 1,
     flexDirection: 'row',
@@ -128,6 +164,14 @@ const styles = {
     borderRadius: 15,
     borderWidth: 1,
     height: '60%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  popButton: {
+    borderRadius: 15,
+    borderWidth: 1,
+    height: '60%',
+    width: '50%',
     alignItems: 'center',
     justifyContent: 'center',
   },

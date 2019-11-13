@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, TextInput,TouchableNativeFeedback, Alert, AsyncStorage } from 'react-native';
 import firebase from 'react-native-firebase';
 import emailRegex from 'email-regex';
+import RegisterInput from './registerInput';
+
 import axios from 'axios';
 class Login extends Component {
     constructor(props) {
@@ -23,6 +25,7 @@ class Login extends Component {
     }
     formIsValid(){
         const { mail, password } = this.state;
+        console.log(mail);
         if(!emailRegex({exact: true}).test(mail)){
             this.showAlert('Correo inválido', 'Ingrese un correo válido');
             return false;
@@ -36,9 +39,12 @@ class Login extends Component {
     login(){
         if(this.formIsValid()){
             firebase.auth().signInWithEmailAndPassword(this.state.mail, this.state.password).then((res) => {
-                console.log(`http://localhost:4000/usuario/${res.user.uid}`);
-                axios.get(`http://localhost:4000/usuario/${res.user.uid}`).then((res) =>{
-                    AsyncStorage.setItem('name', res.nombre);
+                axios.get(`http://localhost:4000/usuario/${res.user.uid}`).then((res) =>{       
+                    AsyncStorage.setItem('name', res.data.nombre, () => {  
+                        //ir a home
+                        this.setState({mail: '', password: ''});
+                        this.props.navigation.navigate('Home');
+                    });
                 }).catch((e) => {
                     console.log(e);
                 })
@@ -53,40 +59,35 @@ class Login extends Component {
     }
     render(){
         return(
-            <View>
-                <Text style={styles.label}>
-                    Correo
-                </Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder={this.props.placeholder}
-                    keyboardType={'email-address'}
-                    value={this.state.mail}
-                    autoCapitalize={'none'}
-                    onChangeText={(txt) => this.setState({mail: txt.toLowerCase()})}
+            <View style={{padding: 10}}>
+                <RegisterInput 
+                            label={'Correo'}
+                            placeholder={'Ej: andrea@gmail.com'}
+                            keyboardType={'email-address'}
+                            value={this.state.mail} 
+                            autoCapitalize={'none'}
+                            onChangeText={(txt) => this.setState({mail: txt.toLowerCase()})}
                 />
-                <Text style={styles.label}>
-                    Contraseña
-                </Text>
-                <TextInput
-                    style={styles.input}
-                    value={this.state.password}
-                    placeholder={this.props.placeholder}
-                    keyboardType={this.props.keyboardType}
-                    secureTextEntry
-                    autoCapitalize={'none'}
-                    onChangeText={(txt) => this.setState({password: txt})}
+                <RegisterInput 
+                            label={'Contraseña'}
+                            placeholder={''}
+                            secureTextEntry  
+                            autoCapitalize={'none'}
+                            value={this.state.password}
+                            onChangeText={(txt) => this.setState({password: txt})}
                 />
-                <TouchableNativeFeedback onPress={this.login.bind(this)}>
-                    <View>
-                        <Text>Login</Text>
-                    </View>
-                </TouchableNativeFeedback>
-                <TouchableNativeFeedback>
-                    <View>
-                        <Text>Signup</Text>
-                    </View>
-                </TouchableNativeFeedback>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'}}>
+                    <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('RegisterForm')}>
+                        <View style={styles.button}>   
+                                <Text style={styles.buttonText}>Registrarse</Text>
+                        </View>
+                    </TouchableNativeFeedback>
+                    <TouchableNativeFeedback onPress={this.login.bind(this)}>
+                        <View style={styles.button}>   
+                            <Text style={styles.buttonText}>Iniciar sesión</Text>
+                        </View>
+                    </TouchableNativeFeedback>
+                </View>
             </View>
         );
     }
@@ -112,6 +113,22 @@ const styles = {
         borderColor: '#E4E4E4',
         borderRadius: 12,
         backgroundColor: '#F7F7F7'
+    },
+    buttonText: {
+        fontSize: 15,
+        fontFamily: "Poppins-Bold",
+        color: '#191919',
+        backgroundColor: 'transparent',
+        textAlign: 'center',
+    },
+    button: {
+        borderRadius: 12,
+        borderWidth: 1,
+        width: '40%',
+        height: 50,
+        borderColor: 'black',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 };
 export default Login;

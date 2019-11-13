@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Image, TouchableNativeFeedback, Modal } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableNativeFeedback, Modal, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import NewAccessory from './newAccessory';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,7 +10,7 @@ class Accessories extends Component {
         this.state = { 
             showNewAccessory: false
         };
-      }
+    }
     renderAccessory() {
         return (
           <View style={styles.cardContainer}>
@@ -22,6 +22,11 @@ class Accessories extends Component {
           </View>
         );
       }
+    componentDidMount(){
+        AsyncStorage.getItem('name', (err, val) => {
+            this.setState({ name: val });
+        })
+    }
     render(){
         return(
             <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -41,7 +46,7 @@ class Accessories extends Component {
                             <Icon name="user" size={15} color="black" solid />
                         </View>
                         <View>
-                            <Text style={styles.nameText}>Andrea</Text>
+                            <Text style={styles.nameText}>{this.state.name}</Text>
                             <Text style={styles.locationText}>Monterrey, México</Text>
                         </View>
                     </View>

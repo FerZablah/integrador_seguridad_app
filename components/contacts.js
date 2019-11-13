@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableNativeFeedback, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableNativeFeedback, Modal, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ContactsTable from './contactsTable';
 import NewContact from './newContact';
@@ -7,9 +7,15 @@ class Contacts extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            showNewUser: false
+            showNewUser: false,
+            name: ''
         };
-      }
+    }
+    componentDidMount(){
+        AsyncStorage.getItem('name', (err, val) => {
+            this.setState({ name: val });
+        })
+    }
     render() {
         return (
             <View style={{ backgroundColor: 'white', flex: 1 }}>
@@ -29,7 +35,7 @@ class Contacts extends Component {
                             <Icon name="user" size={15} color="black" solid />
                         </View>
                         <View>
-                            <Text style={styles.nameText}>Andrea</Text>
+                            <Text style={styles.nameText}>{this.state.name}</Text>
                             <Text style={styles.locationText}>Monterrey, México</Text>
                         </View>
                     </View>

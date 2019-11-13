@@ -14,9 +14,16 @@ import Login from './components/login';
 import Accessories from './components/accessories';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import Startup from './components/startup';
 const AppNavigator = createStackNavigator({
+    Startup: {
+        screen: Startup,
+    },
     Intro: {
         screen: Example,
+    },
+    Login: {
+        screen: Login,
     },
     RegisterForm: {
         screen: RegisterForm
@@ -37,9 +44,10 @@ const AppNavigator = createStackNavigator({
     }
   });
 
-//AppRegistry.registerComponent(appName, () => createAppContainer(AppNavigator));
-AppRegistry.registerComponent(appName, () => RegisterForm);
+AppRegistry.registerComponent(appName, () => createAppContainer(AppNavigator));
+//AppRegistry.registerComponent(appName, () => Startup);
 
 
 //adb shell input text "RR"
 //adb shell input keyevent 82
+//adb reverse tcp:4000 tcp:4000

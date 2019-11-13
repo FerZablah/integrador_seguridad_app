@@ -60,12 +60,19 @@ class RegisterForm extends Component {
                     mail,
                     uid: res.user.uid,
                     phone
-                }).then((res) =>{
-                    AsyncStorage.setItem('name', res.name);
+                }).then((res) => {
+                    firebase.auth().signInWithEmailAndPassword(mail, password).then(() => {   
+                        AsyncStorage.setItem('name', res.data.nombre, () => {
+                            //Navigate to home
+                            this.props.navigation.navigate('Home');
+                        });
+                    })
                 }).catch((e) => {
                     console.log(e);
                 });
-            });
+            }).catch((e) => {
+                showAlert('Usuario ya existe', 'Por favor seleccione otro correo.');
+            })
         }
     }
     render(){
@@ -87,7 +94,8 @@ class RegisterForm extends Component {
                             label={'Correo'}
                             placeholder={'Ej: andrea@gmail.com'}
                             keyboardType={'email-address'}
-                            value={this.state.mail}
+                            value={this.state.mail} 
+                            autoCapitalize={'none'}
                             onChangeText={(txt) => this.setState({mail: txt})}
                         />
                         <RegisterInput 
@@ -100,19 +108,24 @@ class RegisterForm extends Component {
                         <RegisterInput 
                             label={'Contraseña'}
                             placeholder={''}
-                            secureTextEntry
+                            secureTextEntry  
+                            autoCapitalize={'none'}
                             value={this.state.password}
                             onChangeText={(txt) => this.setState({password: txt})}
                         />
                         <RegisterInput 
                             label={'Repetir contraseña'}
                             placeholder={''}
-                            secureTextEntry
+                            secureTextEntry  
+                            autoCapitalize={'none'}
                             value={this.state.confirmPassword}
                             onChangeText={(txt) => this.setState({confirmPassword: txt})}
                         />
                     </View>
                 </KeyboardAwareScrollView>
+                <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Login')}>
+                    <Text>¿Ya estas registrado? Inicia sesión</Text>
+                </TouchableNativeFeedback>
                 <View style={styles.buttonView}> 
                     <TouchableNativeFeedback onPress={this.signup.bind(this)}>
                         <View style={styles.button}>   

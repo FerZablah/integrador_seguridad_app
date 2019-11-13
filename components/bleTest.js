@@ -10,7 +10,6 @@ class BLETest extends Component {
     }
     componentWillMount() {
         const subscription = this.manager.onStateChange((state) => {
-            console.log(state);
             if (state === 'PoweredOn') {
                 this.scanAndConnect();
                 subscription.remove();
