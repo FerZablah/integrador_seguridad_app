@@ -103,6 +103,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        missingDimensionStrategy 'react-native-camera', 'general'
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -148,6 +150,7 @@ preBuild.doFirst {
             }
 }
 dependencies {
+    implementation project(':react-native-camera')
     implementation project(':react-native-firebase')
     implementation project(':react-native-screens')
     implementation project(':react-native-gesture-handler')

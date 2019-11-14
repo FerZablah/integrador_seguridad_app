@@ -8,7 +8,7 @@ class ContactsTableCell extends Component {
                 <Text style={styles.text}>{this.props.name}</Text>
                 <Text style={styles.text}>{this.props.phone}</Text>
                 <Icon name="user-edit" onPress={this.props.modifyClicked} size={20} color="black" solid />
-                <Icon name="trash-alt" size={20} color="black" solid />
+                <Icon name="trash-alt" onPress={this.props.deleteClicked} size={20} color="black" solid />
             </View>
         );
     }

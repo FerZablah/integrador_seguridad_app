@@ -6,11 +6,17 @@ import axios from 'axios';
 class NewContact extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
-        this.state = { 
-            name: props.userToModify.nombre,
-            phone: props.userToModify.telefono
-        };
+        if(props.userToModify){
+            this.state = { 
+                name: props.userToModify.nombre,
+                phone: props.userToModify.telefono
+            };
+        }
+        else{
+            this.state = {
+
+            }
+        }
     }
     createContact(){
         axios.post('http://localhost:4000/contacto/', {
@@ -26,6 +32,7 @@ class NewContact extends Component {
         })
     }
     modifyContact(){
+        console.log('calling modify');
         axios.put('http://localhost:4000/contacto/', {
             old_phone: this.props.userToModify.telefono,
             phone: this.state.phone,
@@ -35,7 +42,7 @@ class NewContact extends Component {
             this.props.close();
         }).catch((e) => {
             //Handle duplicate number
-            console.log(e);
+            console.log(e.response);
         })
     }
     render(){
@@ -53,7 +60,7 @@ class NewContact extends Component {
                 </Text>
                 <OverlayInput
                     changeTxt={(txt) => this.setState({name: txt})}
-                    value={this.state.name}
+                    value={this.state.name ? this.state.name : ''}
                 />
                 <Text style={styles.label}>
                     Télefono

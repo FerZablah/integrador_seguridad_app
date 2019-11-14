@@ -5,6 +5,7 @@ class ContactsTable extends Component {
     renderCell(contact){
         return (
             <ContactsTableCell
+                deleteClicked={() => this.props.deleteUser(contact)}
                 modifyClicked={() => this.props.setUserToModify(contact)}
                 key={contact.telefono}
                 name={contact.nombre}
