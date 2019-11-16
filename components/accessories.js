@@ -1,31 +1,81 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Image, TouchableNativeFeedback, Modal, AsyncStorage } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableNativeFeedback, Modal, AsyncStorage, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import NewAccessory from './newAccessory';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import NewQRAccessory from './newQRAccessory';
+import axios from 'axios';
+import firebase from 'react-native-firebase';
 class Accessories extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            showNewAccessory: false
+            showNewAccessory: false,
+            showNewQRAccessory: false,
+            dispositivos: []
         };
     }
-    renderAccessory() {
+    deleteAccessory(id){
+        axios.delete('http://localhost:4000/dispositivo/' + id).then((res) => {
+            let newDispositivos = this.state.dispositivos;    
+            newDispositivos = newDispositivos.filter((obj) => {
+                return obj.idDispositivo !== id;
+            });
+            this.setState({ dispositivos: newDispositivos });
+        }).catch((e) => {
+            console.log(e);
+        })
+    }
+    showDeleteAlert(dispositivo){
+        Alert.alert(
+            '¿Seguro que deseas eliminar el accesorio Avento Negro?',
+            'Una vez eliminado un accesorio no se podra deshacer la acción.',
+            [
+                {
+                    text: 'Cancelar',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Eliminar',
+                    onPress: () => this.deleteAccessory(dispositivo.idDispositivo),
+                    style: 'positive'
+                },
+            ],
+            { cancelable: false },
+        );
+    }
+    addAccessory(dispositivo){
+        const newDispositivos = this.state.dispositivos;
+        newDispositivos.push({idDispositivo: dispositivo});
+        this.setState({ dispositivos: newDispositivos });
+    }
+    renderAccessory(dispositivo) {
         return (
-          <View style={styles.cardContainer}>
-            <View style={styles.card}>
-              <Image source={require('../assets/pictures/6.png')} style={styles.image} />
-              <Text style={styles.imgDesc}>Anillo:</Text>
-              <Text style={styles.imgDesc}>Avento Negro</Text>
-            </View>
-          </View>
+            <TouchableNativeFeedback key={dispositivo.idDispositivo} onPress={() => this.showDeleteAlert(dispositivo)}>
+                <View style={styles.cardContainer}>
+                    <View style={styles.card}>
+                    <Image source={require('../assets/pictures/6.png')} style={styles.image} />
+                    <Text style={styles.imgDesc}>Anillo:</Text>
+                    <Text style={styles.imgDesc}>Avento Negro</Text>
+                    </View>
+                </View>
+            </TouchableNativeFeedback>
         );
       }
+    getAccessories(){
+        axios.get('http://localhost:4000/dispositivo/'+firebase.auth().currentUser.uid)
+        .then((res) => {
+            this.setState({dispositivos: res.data});
+            this.props.close();
+        }).catch((e) => {
+            console.log(e.response);
+        })
+    }
     componentDidMount(){
         AsyncStorage.getItem('name', (err, val) => {
             this.setState({ name: val });
-        })
+        });
+        this.getAccessories();
     }
     render(){
         return(
@@ -39,6 +89,19 @@ class Accessories extends Component {
                     }}
                 >
                     <NewAccessory close={() => this.setState({showNewAccessory: false})}/>
+                </Modal>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.showNewQRAccessory}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                    }}
+                >
+                    <NewQRAccessory 
+                        addAccessory={this.addAccessory.bind(this)}
+                        close={() => this.setState({showNewQRAccessory: false})}
+                    />
                 </Modal>
                 <View style={{ alignItems: 'center', width: '40%', height: '10%', marginLeft: 30 }}>
                     <View style={styles.profileView}>
@@ -66,15 +129,14 @@ class Accessories extends Component {
                         horizontal={true}
                         contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1}}
                     >
-                        {this.renderAccessory()}
-                        {this.renderAccessory()}
-                        {this.renderAccessory()}
-                        {this.renderAccessory()}
+                        {
+                            this.state.dispositivos.map(dispositivo => this.renderAccessory(dispositivo))
+                        }
                     </ScrollView>
                 </View>
                 <View style={styles.buttonsViews}>
                     <View style={{flex: 1, alignItems: 'center'}}>
-                        <TouchableNativeFeedback onPress={() => this.setState({showNewAccessory: true})}>
+                        <TouchableNativeFeedback onPress={() => this.setState({showNewQRAccessory: true})}>
                         <View style={styles.button}>
                             <Material name="qrcode-scan" size={35}color="black" solid/>
                             <Text style={styles.buttonText}>Añadir accesorio (QR)</Text>
