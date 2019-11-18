@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableNativeFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import BLETest from './bleTest';
+import firebase from 'react-native-firebase';
+import axios from 'axios';
 class BluetoothList extends Component {
     constructor(props) {
         super(props);
@@ -9,14 +11,27 @@ class BluetoothList extends Component {
             devices: []
         };
     }
+    addDevice(name){
+        axios.post('http://localhost:4000/dispositivo/', {
+            idDispositivo: name,
+            uid: firebase.auth().currentUser.uid
+        }).then((res) => {
+            this.props.addAccessory(res.data.idDispositivo);
+            this.props.close();
+        }).catch((e) => {
+            console.log(e);
+        })
+    }
     renderCell(name){
         return (
-            <View style={styles.cell} key={name}>
-                <Icon name="bluetooth-b" size={20} color="black" solid />
-                <Text style={styles.label}>
-                    {name}
-                </Text>
-            </View>
+            <TouchableNativeFeedback key={name} onPress={() => this.addDevice(name)}>
+                <View style={styles.cell}>
+                    <Icon name="bluetooth-b" size={20} color="black" solid />
+                    <Text style={styles.label}>
+                        {name}
+                    </Text>
+                </View>
+            </TouchableNativeFeedback>
         )
     }
     updateDevices(device){

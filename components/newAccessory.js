@@ -20,7 +20,10 @@ class NewAccessory extends Component {
                 <Text style={styles.list}>
                     4. ¡Listo tu nuevo accesorio está registrado!
                 </Text>
-                <BluetoothList />
+                <BluetoothList 
+                    addAccessory={this.props.addAccessory}
+                    close={this.props.close}
+                />
                 
                 <View style={styles.buttonView}> 
                     <TouchableNativeFeedback  onPress={() => this.props.close()}>

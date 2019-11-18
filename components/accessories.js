@@ -88,7 +88,10 @@ class Accessories extends Component {
                         Alert.alert('Modal has been closed.');
                     }}
                 >
-                    <NewAccessory close={() => this.setState({showNewAccessory: false})}/>
+                    <NewAccessory 
+                        close={() => this.setState({showNewAccessory: false})}
+                        addAccessory={this.addAccessory.bind(this)}
+                    />
                 </Modal>
                 <Modal
                     animationType="slide"
