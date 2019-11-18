@@ -12,20 +12,16 @@ class NewQRAccessory extends Component {
         };
     }
     qrReceived(data){
-        console.log('send ', data);
         this.setState({showQRCamera: false})
         axios.post('http://localhost:4000/dispositivo/', {
             idDispositivo: data,
             uid: firebase.auth().currentUser.uid
         }).then((res) => {
-            console.log(res.data);
             this.props.addAccessory(res.data.idDispositivo);
             this.props.close();
         }).catch((e) => {
             console.log(e.response);
         })
-        //Register on backend
-            //Return to accesories 
     }
     render(){
         if(this.state.showQRCamera){

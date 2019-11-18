@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
-//import { Buffer } from 'buffer'
 
 class BLETest extends Component {
     constructor() {
@@ -22,31 +21,14 @@ class BLETest extends Component {
                 console.log('scanningError', error)
                 return;
             }
-            if(device.id === 'B8:27:EB:6C:1A:50'){
-                console.log(device.id);
-                this.manager.stopDeviceScan();
-                device.connect().then((device) => {
-                    console.log('connected to: ' + device.id);
-                    device.discoverAllServicesAndCharacteristics().then((res) => {
-                        device.services().then((services) => {
-                            console.log(services);
-                        })
-                    })
-
-                })
-                .catch((error) => {
-                    // Handle errors
-                    console.log('error cant connect to '+ device.name, error);
-                });
+            if(device.name && device.name.substring(0,12) === 'scrbruid2020'){
+                this.props.updateDevices(device.name.substring(13,device.name.length));
             }
         });
     }
     render(){
         return(
             <View>
-                <Text>
-                    TEST
-                </Text>
             </View>
         );
     }

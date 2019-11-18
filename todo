@@ -1,5 +1,4 @@
-implementar vinculacion qr y bluetooth
-implementar back vinculacion dispositivo y usuario
+implementar bluetooth
 implementar back envio a varios contactos registrados 
 Validar que contacto nuevo no exista en bd para ese usuario
 Validar que contacto modificado no exista en bd para ese usuario (checar que newPhone sea diferente a todos los de la bd que no son oldPhone)

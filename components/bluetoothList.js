@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import BLETest from './bleTest';
 class BluetoothList extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { 
+            devices: []
+        };
+    }
     renderCell(name){
         return (
             <View style={styles.cell} key={name}>
@@ -12,11 +19,18 @@ class BluetoothList extends Component {
             </View>
         )
     }
+    updateDevices(device){
+        if(!this.state.devices.includes(device)){
+            let newDevices = this.state.devices;    
+            newDevices.push(device);
+            this.setState({ devices: newDevices });
+        }
+    }
     render(){
-        const devices = ['Collar Nova Plata', 'Cinto Hayes Café', '45:F3:D2:00', 'Collar Mango Negro', 'TV Samsung', 'Anillo Tandem Oro']
         return(
             <View style={{flex: 1, justifyContent: 'flex-start', marginTop: 10}}>
-                {devices.map(device => this.renderCell(device))}
+                {this.state.devices.map(device => this.renderCell(device))}
+                <BLETest updateDevices={this.updateDevices.bind(this)}></BLETest>
             </View>
         );
     }
