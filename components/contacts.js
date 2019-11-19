@@ -5,6 +5,7 @@ import ContactsTable from './contactsTable';
 import NewContact from './newContact';
 import firebase from 'react-native-firebase';
 import axios from 'axios';
+import ProfileView from './profileView';
 class Contacts extends Component {
     constructor(props) {
         super(props);
@@ -35,7 +36,7 @@ class Contacts extends Component {
         this.searchContacts(this.state.searchTxt);
     }
     deleteUser(user){
-        axios.delete('http://localhost:4000/contacto/' + user.telefono).then((res) => {
+        axios.delete(BASE_URL +'contacto/'+ user.telefono).then((res) => {
             let newContacts = this.state.contacts;    
             newContacts = newContacts.filter((obj) => {
                 return obj.telefono !== user.telefono;
@@ -68,12 +69,22 @@ class Contacts extends Component {
         AsyncStorage.getItem('name', (err, val) => {
             this.setState({ name: val });
         });
-        axios.get('http://localhost:4000/contacto/' + firebase.auth().currentUser.uid).then((res) => {
+        axios.get(BASE_URL +'contacto/'+ firebase.auth().currentUser.uid).then((res) => {
             this.setState({ contacts: res.data });
             console.log(res.data);
             this.searchContacts(this.state.searchTxt);
         }).catch((e) => {
             console.log(e);
+            Alert.alert(
+                'Parece que ya esta registrado este número telefónico',
+                [
+                    {
+                        text: 'Okey',
+                        style: 'cancel',
+                    },
+                ],
+                { cancelable: true },
+            );
         })
     }
     searchContacts(txt){
@@ -102,17 +113,7 @@ class Contacts extends Component {
                         userToModify={this.state.userToModify ? this.state.userToModify : null}
                     />
                 </Modal>
-                <View style={{ alignItems: 'center', width: '40%', height: '10%', marginLeft: 30 }}>
-                    <View style={styles.profileView}>
-                        <View style={styles.iconContainer}>
-                            <Icon name="user" size={15} color="black" solid />
-                        </View>
-                        <View>
-                            <Text style={styles.nameText}>{this.state.name}</Text>
-                            <Text style={styles.locationText}>Monterrey, México</Text>
-                        </View>
-                    </View>
-                </View>
+                <ProfileView name={this.state.name}/>
                 <View style={{ flexDirection: 'row', height: '10%' }}>
                     <View style={{ height: '100%', width: '17%', alignItems: 'center', justifyContent: 'center' }}>
                         <Icon onPress={() => this.props.navigation.pop()} name="chevron-left" size={20} color="black" solid />
@@ -156,50 +157,6 @@ class Contacts extends Component {
     }
 }
 const styles = {
-    profileView: {
-        height: 100,
-        width: 100,
-        flexDirection: 'row',
-        zIndex: 10,
-        alignItems: 'center',
-        justifyContent: 'flex-end'
-    },
-    nameText: {
-        textAlign: 'center',
-        fontSize: 12,
-        fontFamily: "Poppins-Regular",
-        color: '#191919',
-        padding: 0,
-        margin: 0
-    },
-    locationText: {
-        textAlign: 'center',
-        fontSize: 10,
-        width: '100%',
-        fontFamily: "Poppins-Regular",
-        color: '#191919',
-        padding: 0,
-        margin: 0
-    },
-    iconContainer: {
-        borderWidth: 1,
-        height: 30,
-        width: 30,
-        borderRadius: 50,
-        borderColor: '#EDF2F7',
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    header: {
-        fontSize: 18,
-        fontFamily: "Poppins-Bold",
-        color: '#191919',
-        width: '60%',
-        backgroundColor: 'transparent',
-        textAlign: 'center'
-
-    },
     input: {
         width: 250,
         fontSize: 13,

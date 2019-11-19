@@ -53,7 +53,7 @@ class Home extends Component {
             longitudeDelta: 0.0121
           }}
         ></MapView>
-        <Modal isVisible={this.state.showLogout}>
+        <Modal onBackdropPress={() => this.setState({ showLogout: false })} onBackButtonPress={() => this.setState({ showLogout: false })} isVisible={this.state.showLogout}>
           <View style={{ justifyContent: 'flex-end', flex: 1 }}>
             <View style={{ backgroundColor: 'white', width: '100%', height: 100, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
               <TouchableNativeFeedback onPress={() => this.signOut()}>

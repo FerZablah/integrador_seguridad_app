@@ -4,15 +4,13 @@
  */
 
 import {AppRegistry} from 'react-native';
-import BLETest from './components/bleTest';
-import Example from './components/walkthrough';
+import Walkthrough from './components/walkthrough';
 import RegisterForm from './components/registerForm';
 import Home from './components/home';
 import Contacts from './components/contacts';
 import {name as appName} from './app.json';
 import Login from './components/login';
 import Accessories from './components/accessories';
-import QRCamera from './components/qrCamera';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import Startup from './components/startup';
@@ -21,7 +19,7 @@ const AppNavigator = createStackNavigator({
         screen: Startup,
     },
     Intro: {
-        screen: Example,
+        screen: Walkthrough,
     },
     Login: {
         screen: Login,

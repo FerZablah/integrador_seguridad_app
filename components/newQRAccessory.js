@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import QRCamera from './qrCamera';
 import axios from 'axios';
 import firebase from 'react-native-firebase';
+import BASE_URL from '../base_url.js';
 
 class NewQRAccessory extends Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class NewQRAccessory extends Component {
     }
     qrReceived(data){
         this.setState({showQRCamera: false})
-        axios.post('http://localhost:4000/dispositivo/', {
+        axios.post(BASE_URL+'dispositivo/', {
             idDispositivo: data,
             uid: firebase.auth().currentUser.uid
         }).then((res) => {
@@ -21,6 +22,7 @@ class NewQRAccessory extends Component {
             this.props.close();
         }).catch((e) => {
             console.log(e.response);
+            this.props.close();
         })
     }
     render(){

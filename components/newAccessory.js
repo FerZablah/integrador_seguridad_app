@@ -67,7 +67,6 @@ const styles = {
         justifyContent: 'center'
     },
     buttonView: {
-        alignItems: 'flex-start',
         marginTop: 20,
         width: 150,
         alignItems: 'center'

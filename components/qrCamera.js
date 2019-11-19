@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import { View } from 'react-native-animatable';
 

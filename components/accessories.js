@@ -5,7 +5,9 @@ import NewAccessory from './newAccessory';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import NewQRAccessory from './newQRAccessory';
 import axios from 'axios';
+import ProfileView from './profileView';
 import firebase from 'react-native-firebase';
+import BASE_URL from '../base_url.js';
 class Accessories extends Component {
     constructor(props) {
         super(props);
@@ -16,7 +18,7 @@ class Accessories extends Component {
         };
     }
     deleteAccessory(id){
-        axios.delete('http://localhost:4000/dispositivo/' + id).then((res) => {
+        axios.delete(BASE_URL +'dispositivo/' +id).then((res) => {
             let newDispositivos = this.state.dispositivos;    
             newDispositivos = newDispositivos.filter((obj) => {
                 return obj.idDispositivo !== id;
@@ -63,12 +65,12 @@ class Accessories extends Component {
         );
       }
     getAccessories(){
-        axios.get('http://localhost:4000/dispositivo/'+firebase.auth().currentUser.uid)
+        axios.get(BASE_URL+'dispositivo/'+firebase.auth().currentUser.uid)
         .then((res) => {
             this.setState({dispositivos: res.data});
-            this.props.close();
+            console.log(res.data);
         }).catch((e) => {
-            console.log(e.response);
+            console.log(e);
         })
     }
     componentDidMount(){
@@ -106,17 +108,7 @@ class Accessories extends Component {
                         close={() => this.setState({showNewQRAccessory: false})}
                     />
                 </Modal>
-                <View style={{ alignItems: 'center', width: '40%', height: '10%', marginLeft: 30 }}>
-                    <View style={styles.profileView}>
-                        <View style={styles.iconContainer}>
-                            <Icon name="user" size={15} color="black" solid />
-                        </View>
-                        <View>
-                            <Text style={styles.nameText}>{this.state.name}</Text>
-                            <Text style={styles.locationText}>Monterrey, México</Text>
-                        </View>
-                    </View>
-                </View>
+                <ProfileView name={this.state.name}/>
                 <View style={{ flexDirection: 'row', height: '10%' }}>
                     <View style={{ height: '100%', width: '35%', alignItems: 'center', justifyContent: 'center' }}>
                         <Icon onPress={() => this.props.navigation.pop()}name="chevron-left" size={20} color="black" solid />
@@ -160,49 +152,6 @@ class Accessories extends Component {
     }
 }
 const styles = {
-    profileView: {
-        height: 100,
-        width: 100,
-        flexDirection: 'row',
-        zIndex: 10,
-        alignItems: 'center',
-        justifyContent: 'flex-end'
-    },
-    nameText: {
-        textAlign: 'center',
-        fontSize: 12,
-        fontFamily: "Poppins-Regular",
-        color: '#191919',
-        padding: 0,
-        margin: 0
-    },
-    locationText: {
-        textAlign: 'center',
-        fontSize: 10,
-        width: '100%',
-        fontFamily: "Poppins-Regular",
-        color: '#191919',
-        padding: 0,
-        margin: 0
-    },
-    iconContainer: {
-        borderWidth: 1,
-        height: 30,
-        width: 30,
-        borderRadius: 50,
-        borderColor: '#EDF2F7',
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    header: {
-        fontSize: 18,
-        fontFamily: "Poppins-Bold",
-        color: '#191919',
-        width: '100%',
-        backgroundColor: 'transparent',
-        textAlign: 'center'
-    },
     cardContainer: {
         justifyContent: 'center',
     },

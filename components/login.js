@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput,TouchableNativeFeedback, Alert, AsyncStorage } from 'react-native';
+import { View, Text, TouchableNativeFeedback, Alert, AsyncStorage } from 'react-native';
 import firebase from 'react-native-firebase';
 import emailRegex from 'email-regex';
 import RegisterInput from './registerInput';
+import BASE_URL from '../base_url.js';
 
 import axios from 'axios';
 class Login extends Component {
@@ -39,8 +40,8 @@ class Login extends Component {
     login(){
         if(this.formIsValid()){
             firebase.auth().signInWithEmailAndPassword(this.state.mail, this.state.password).then((res) => {
-                axios.get(`http://localhost:4000/usuario/${res.user.uid}`).then((res) =>{       
-                    AsyncStorage.setItem('name', res.data.nombre, () => {  
+                axios.get(`${BASE_URL}usuario/${res.user.uid}`).then((user) =>{       
+                    AsyncStorage.setItem('name', user.data.nombre, () => {  
                         //ir a home
                         this.setState({mail: '', password: ''});
                         this.props.navigation.navigate('Home');

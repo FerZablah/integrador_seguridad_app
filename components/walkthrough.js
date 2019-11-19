@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
 
 const slides = [
@@ -28,7 +28,7 @@ const slides = [
     }
 ];
 
-class Example extends React.Component {
+class Walkthrough extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -64,7 +64,7 @@ class Example extends React.Component {
         if (this.state.showRealApp) {
             return <App />;
         } else {
-            const {dotStyle, activeDotStyle, buttonTextStyle } = styles;
+            const {dotStyle, activeDotStyle } = styles;
             return (
                     <View style={{flex: 1, backgroundColor: 'white'}}>
                         <AppIntroSlider
@@ -134,5 +134,5 @@ const styles = {
         }
     }
 };
-export default Example;
+export default Walkthrough;
 

@@ -15,7 +15,7 @@ class Startup extends Component {
                 //Checar si ya esta iniciada la sesion
                 if(firebase.auth().currentUser){
                     //Si, ir a home
-                    this.props.navigation.navigate('Home');
+                    this.props.navigation.replace('Home');
                 }
                 else{
                     //No, ir a login

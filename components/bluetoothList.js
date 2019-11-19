@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import BLETest from './bleTest';
 import firebase from 'react-native-firebase';
 import axios from 'axios';
+import BASE_URL from '../base_url.js';
+
 class BluetoothList extends Component {
     constructor(props) {
         super(props);
@@ -12,7 +14,7 @@ class BluetoothList extends Component {
         };
     }
     addDevice(name){
-        axios.post('http://localhost:4000/dispositivo/', {
+        axios.post(BASE_URL + 'dispositivo/', {
             idDispositivo: name,
             uid: firebase.auth().currentUser.uid
         }).then((res) => {

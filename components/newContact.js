@@ -3,6 +3,7 @@ import { View, Text, TouchableNativeFeedback } from 'react-native';
 import OverlayInput from './overlayInput';
 import firebase from 'react-native-firebase';
 import axios from 'axios';
+import BASE_URL from '../base_url.js';
 class NewContact extends Component {
     constructor(props) {
         super(props);
@@ -19,7 +20,7 @@ class NewContact extends Component {
         }
     }
     createContact(){
-        axios.post('http://localhost:4000/contacto/', {
+        axios.post(BASE_URL+'contacto/', {
             uid: firebase.auth().currentUser.uid,
             phone: this.state.phone,
             name: this.state.name
@@ -29,11 +30,12 @@ class NewContact extends Component {
         }).catch((e) => {
             //Handle duplicate number
             console.log(e);
+            this.props.close();
         })
     }
     modifyContact(){
         console.log('calling modify');
-        axios.put('http://localhost:4000/contacto/', {
+        axios.put(BASE_URL+'contacto/', {
             old_phone: this.props.userToModify.telefono,
             phone: this.state.phone,
             name: this.state.name
@@ -42,6 +44,7 @@ class NewContact extends Component {
             this.props.close();
         }).catch((e) => {
             //Handle duplicate number
+            this.props.close();
             console.log(e.response);
         })
     }
@@ -75,7 +78,7 @@ class NewContact extends Component {
                         height: 50
                     }}
                 />
-                {addFromPhone}
+                {/*addFromPhone*/}
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                     <View style={styles.buttonView}> 
                         <TouchableNativeFeedback  onPress={() => this.props.close()}>
@@ -148,7 +151,6 @@ const styles = {
         textAlign: 'center',
     },
     buttonView: {
-        alignItems: 'flex-start',
         marginTop: 20,
         width: 150,
         alignItems: 'center'

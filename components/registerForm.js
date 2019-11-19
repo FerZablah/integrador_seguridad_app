@@ -5,6 +5,7 @@ import RegisterInput from './registerInput';
 import emailRegex from 'email-regex';
 import firebase from 'react-native-firebase';
 import axios from 'axios';
+import BASE_URL from '../base_url.js';
 
 class RegisterForm extends Component {
     constructor(props) {
@@ -55,14 +56,14 @@ class RegisterForm extends Component {
         if(this.formIsValid()){
             const { mail, password, name, phone } = this.state;
             firebase.auth().createUserWithEmailAndPassword(mail, password).then((res) => {
-                axios.post(`http://localhost:4000/usuario`, {
+                axios.post(`${BASE_URL}usuario`, {
                     name,
                     mail,
                     uid: res.user.uid,
                     phone
-                }).then((res) => {
+                }).then((usuario) => {
                     firebase.auth().signInWithEmailAndPassword(mail, password).then(() => {   
-                        AsyncStorage.setItem('name', res.data.nombre, () => {
+                        AsyncStorage.setItem('name', usuario.data.nombre, () => {
                             //Navigate to home
                             this.props.navigation.navigate('Home');
                         });
