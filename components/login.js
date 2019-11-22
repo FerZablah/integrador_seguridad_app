@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableNativeFeedback, Alert, AsyncStorage } from 'react-native';
+import { View, Text, TouchableNativeFeedback, Alert, AsyncStorage, ActivityIndicator } from 'react-native';
 import firebase from 'react-native-firebase';
 import emailRegex from 'email-regex';
 import RegisterInput from './registerInput';
@@ -11,7 +11,8 @@ class Login extends Component {
         super(props);
         this.state = { 
             password: '',
-            mail: ''
+            mail: '',
+            showSpinner: false
         };
     }
     showAlert(title, message){
@@ -39,28 +40,34 @@ class Login extends Component {
     }
     login(){
         if(this.formIsValid()){
+            this.setState({showSpinner: true});
             firebase.auth().signInWithEmailAndPassword(this.state.mail, this.state.password).then((res) => {
                 axios.get(`${BASE_URL}usuario/${res.user.uid}`).then((user) =>{       
                     AsyncStorage.setItem('name', user.data.nombre, () => {  
                         //ir a home
                         this.setState({mail: '', password: ''});
+                        this.setState({showSpinner: false});
                         this.props.navigation.navigate('Home');
                     });
                 }).catch((e) => {
                     console.log(e);
+                    this.setState({showSpinner: false});
                 })
             }).catch((e) => {
                 this.showAlert('Credenciales inválidas', 'El usuario parece no existir o la contraseña es inválida');
+                this.setState({showSpinner: false});
                 this.setState({ mail: '', password: '' });
             });
         }
         else{
             this.setState({ mail: '', password: '' });
+            this.setState({showSpinner: false});
         }
     }
     render(){
         return(
             <View style={{padding: 10}}>
+                <ActivityIndicator animating={this.state.showSpinner}/>
                 <RegisterInput 
                             label={'Correo'}
                             placeholder={'Ej: andrea@gmail.com'}
