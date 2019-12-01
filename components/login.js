@@ -53,14 +53,17 @@ class Login extends Component {
                     });
                 }).catch((e) => {
                     console.log(e);
+                    this.setState({showSpinner: false});
                 })
             }).catch((e) => {
                 this.showAlert('Credenciales inválidas', 'El usuario parece no existir o la contraseña es inválida');
+                this.setState({showSpinner: false});
                 this.setState({ mail: '', password: '' });
             });
         }
         else{
             this.setState({ mail: '', password: '' });
+            this.setState({showSpinner: false});
         }
     }
     render(){
