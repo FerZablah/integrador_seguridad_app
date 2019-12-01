@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableNativeFeedback, Alert, AsyncStorage } from 'react-native';
+import { View, Text, TouchableNativeFeedback, Alert, AsyncStorage, ActivityIndicator } from 'react-native';
 import firebase from 'react-native-firebase';
 import emailRegex from 'email-regex';
 import RegisterInput from './registerInput';
 import BASE_URL from '../base_url.js';
 
 import axios from 'axios';
+import { throwStatement } from '@babel/types';
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = { 
             password: '',
-            mail: ''
+            mail: '',
+            showSpinner: false
         };
     }
     showAlert(title, message){
@@ -26,25 +28,28 @@ class Login extends Component {
     }
     formIsValid(){
         const { mail, password } = this.state;
-        console.log(mail);
         if(!emailRegex({exact: true}).test(mail)){
             this.showAlert('Correo inválido', 'Ingrese un correo válido');
             return false;
         }
         if(password.length < 6){
             this.showAlert('Contraseña inválida', 'Ingrese una contraseña de al menos 6 caracteres');
+            this.setState({password: ''});
             return false;
         }
         return true;
     }
     login(){
+        this.setState({mail: '', password: ''});
         if(this.formIsValid()){
+            this.setState({showSpinner: true});
             firebase.auth().signInWithEmailAndPassword(this.state.mail, this.state.password).then((res) => {
                 axios.get(`${BASE_URL}usuario/${res.user.uid}`).then((user) =>{       
                     AsyncStorage.setItem('name', user.data.nombre, () => {  
-                        //ir a home
-                        this.setState({mail: '', password: ''});
-                        this.props.navigation.navigate('Home');
+                            //ir a home
+                            this.setState({mail: '', password: '', showSpinner: false});
+                            this.props.navigation.navigate('Home').then(() => {
+                        });
                     });
                 }).catch((e) => {
                     console.log(e);
@@ -59,8 +64,10 @@ class Login extends Component {
         }
     }
     render(){
+        console.log(this.state);
         return(
             <View style={{padding: 10}}>
+                <ActivityIndicator size={'large'} style={{opacity: this.state.showSpinner ? 1.0 : 0.0}} animating={true}/> 
                 <RegisterInput 
                             label={'Correo'}
                             placeholder={'Ej: andrea@gmail.com'}

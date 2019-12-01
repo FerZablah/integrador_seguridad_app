@@ -4,6 +4,7 @@ import OverlayInput from './overlayInput';
 import firebase from 'react-native-firebase';
 import axios from 'axios';
 import BASE_URL from '../base_url.js';
+
 class NewContact extends Component {
     constructor(props) {
         super(props);
@@ -49,10 +50,6 @@ class NewContact extends Component {
         })
     }
     render(){
-        const addFromPhone = this.props.userToModify ?    
-            <Text style={styles.link}>
-                O agrega desde tu dispositivo
-            </Text> : null;
         return(
             <View style={{ flex: 1, alignItems: 'center', padding: 10}}>
                 <Text style={styles.header}>
@@ -75,10 +72,10 @@ class NewContact extends Component {
                 />
                 <View
                     style={{
-                        height: 50
+                        height: 50,
+                        backgroundColor: 'blue'
                     }}
                 />
-                {/*addFromPhone*/}
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
                     <View style={styles.buttonView}> 
                         <TouchableNativeFeedback  onPress={() => this.props.close()}>
@@ -113,6 +110,7 @@ const styles = {
         color: '#4B96E9',
         backgroundColor: 'transparent',
         textAlign: 'center',
+        flex: 1
     },
     label: {
         fontSize: 12,

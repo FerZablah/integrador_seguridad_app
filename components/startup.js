@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, AsyncStorage } from 'react-native';
+import { View, AsyncStorage, ActivityIndicator } from 'react-native';
 import firebase from 'react-native-firebase';
 class Startup extends Component {
     componentDidMount(){
@@ -33,10 +33,8 @@ class Startup extends Component {
     }
     render(){
         return(
-            <View>
-                <Text>
-                    TEST
-                </Text>
+            <View style={{ flex: 1 }}>
+                <ActivityIndicator size="large"/>
             </View>
         );
     }

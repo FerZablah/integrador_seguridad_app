@@ -177,7 +177,7 @@ const styles = {
     },
     image: {
         width: '50%',
-        height: undefined,
+        height: '10%',
         aspectRatio: 3/2
     }
 };

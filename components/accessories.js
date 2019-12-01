@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Image, TouchableNativeFeedback, Modal, AsyncStorage, Alert } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableNativeFeedback, Modal, AsyncStorage, Alert, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import NewAccessory from './newAccessory';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,7 +14,8 @@ class Accessories extends Component {
         this.state = { 
             showNewAccessory: false,
             showNewQRAccessory: false,
-            dispositivos: []
+            dispositivos: [],
+            showSpinner: true
         };
     }
     deleteAccessory(id){
@@ -65,21 +66,39 @@ class Accessories extends Component {
         );
       }
     getAccessories(){
+        this.setState({showSpinner: true});
         axios.get(BASE_URL+'dispositivo/'+firebase.auth().currentUser.uid)
         .then((res) => {
-            this.setState({dispositivos: res.data});
+            this.setState({dispositivos: res.data, showSpinner: false});
             console.log(res.data);
         }).catch((e) => {
             console.log(e);
         })
     }
     componentDidMount(){
+        console.log('fetching accesory');
         AsyncStorage.getItem('name', (err, val) => {
             this.setState({ name: val });
         });
         this.getAccessories();
     }
     render(){
+        let devicesView = <ActivityIndicator size={'large'} style={{flex: 1}} animating={true}/>;
+        if(!this.state.showSpinner){
+            devicesView = (
+                <View style={{width: '100%', height: '50%', alignItems: 'center', justifyContent: 'center'}}>
+                    <ScrollView
+                        horizontal={true}
+                        contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1}}
+                    >
+                        {
+                            this.state.dispositivos.map(dispositivo => this.renderAccessory(dispositivo))
+                        }
+                    </ScrollView>
+                </View>
+            );
+        } 
+
         return(
             <View style={{flex: 1, backgroundColor: 'white'}}>
                 <Modal
@@ -119,16 +138,7 @@ class Accessories extends Component {
                         </Text>
                     </View>
                 </View>
-                <View style={{width: '100%', height: '50%', alignItems: 'center', justifyContent: 'center'}}>
-                    <ScrollView
-                        horizontal={true}
-                        contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1}}
-                    >
-                        {
-                            this.state.dispositivos.map(dispositivo => this.renderAccessory(dispositivo))
-                        }
-                    </ScrollView>
-                </View>
+                {devicesView}
                 <View style={styles.buttonsViews}>
                     <View style={{flex: 1, alignItems: 'center'}}>
                         <TouchableNativeFeedback onPress={() => this.setState({showNewQRAccessory: true})}>

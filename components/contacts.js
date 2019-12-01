@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, TouchableNativeFeedback, Modal, AsyncStorage, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableNativeFeedback, Modal, AsyncStorage, Alert, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import ContactsTable from './contactsTable';
 import NewContact from './newContact';
@@ -15,7 +15,8 @@ class Contacts extends Component {
             contacts: [],
             userToModify: undefined,
             contactsToSearch: [],
-            searchTxt: ''
+            searchTxt: '',
+            showSpinner: false
         };
     }
     addUser(user) {
@@ -69,8 +70,9 @@ class Contacts extends Component {
         AsyncStorage.getItem('name', (err, val) => {
             this.setState({ name: val });
         });
+        this.setState({showSpinner: true});
         axios.get(BASE_URL +'contacto/'+ firebase.auth().currentUser.uid).then((res) => {
-            this.setState({ contacts: res.data });
+            this.setState({ contacts: res.data, showSpinner: false });
             console.log(res.data);
             this.searchContacts(this.state.searchTxt);
         }).catch((e) => {
@@ -96,6 +98,20 @@ class Contacts extends Component {
         this.setState({contactsToSearch: newContacts})
     }
     render() {
+        let contactsTableView = <ActivityIndicator size={'large'} style={{flex: 1}} animating={true}/>;
+        if(!this.state.showSpinner){
+            contactsTableView = (  
+                <ContactsTable
+                    setUserToModify={(user) => {
+                        this.setState({ userToModify: user, showNewUser: true });
+                    }}
+                    deleteUser={(user) => {
+                        this.showDeleteAlert(user);
+                    }}
+                    contacts={this.state.contactsToSearch}
+                />
+            );
+        }
         return (
             <View style={{ backgroundColor: 'white', flex: 1 }}>
                 <Modal
@@ -143,15 +159,7 @@ class Contacts extends Component {
                         </TouchableNativeFeedback>
                     </View>
                 </View>
-                <ContactsTable
-                    setUserToModify={(user) => {
-                        this.setState({ userToModify: user, showNewUser: true });
-                    }}
-                    deleteUser={(user) => {
-                        this.showDeleteAlert(user);
-                    }}
-                    contacts={this.state.contactsToSearch}
-                />
+                {contactsTableView}
             </View>
         );
     }
