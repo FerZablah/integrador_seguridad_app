@@ -6,6 +6,7 @@ import com.facebook.react.ReactApplication;
 import org.reactnative.camera.RNCameraPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
@@ -40,7 +41,8 @@ public class MainApplication extends Application implements ReactApplication {
             new ReanimatedPackage(),
             new BlePackage(),
             new MapsPackage(),
-            new RNFirebaseAuthPackage()
+            new RNFirebaseAuthPackage(),
+            new ReactNativeContacts()
       );
     }
 

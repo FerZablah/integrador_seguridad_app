@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, Image, TouchableNativeFeedback, Modal, AsyncStorage, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableNativeFeedback, Modal, AsyncStorage, Alert, ActivityIndicator, KeyboardAvoidingView  } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import NewAccessory from './newAccessory';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -87,26 +87,28 @@ class Accessories extends Component {
         if(!this.state.showSpinner){
             devicesView = (
                 <View style={{width: '100%', height: '50%', alignItems: 'center', justifyContent: 'center'}}>
-                    <ScrollView
-                        horizontal={true}
-                        contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1}}
-                    >
-                        {
-                            this.state.dispositivos.map(dispositivo => this.renderAccessory(dispositivo))
-                        }
-                    </ScrollView>
+                    <KeyboardAvoidingView keyboardVerticalOffset={-500} behavior="padding" enabled>
+                        <ScrollView
+                            horizontal={true}
+                            contentContainerStyle={{ alignItems: 'center', justifyContent: 'center', flexGrow: 1}}
+                        >
+                            {
+                                this.state.dispositivos.map(dispositivo => this.renderAccessory(dispositivo))
+                            }
+                        </ScrollView>
+                    </KeyboardAvoidingView>
                 </View>
             );
         } 
 
         return(
-            <View style={{flex: 1, backgroundColor: 'white'}}>
+            <View style={{flex: 1, backgroundColor: 'white', alignItems: 'center'}}>
                 <Modal
                     animationType="slide"
                     transparent={false}
                     visible={this.state.showNewAccessory}
                     onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
+                        this.setState({showNewAccessory: false});
                     }}
                 >
                     <NewAccessory 
@@ -119,7 +121,7 @@ class Accessories extends Component {
                     transparent={false}
                     visible={this.state.showNewQRAccessory}
                     onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
+                        this.setState({showNewQRAccessory: false});
                     }}
                 >
                     <NewQRAccessory 
@@ -127,8 +129,7 @@ class Accessories extends Component {
                         close={() => this.setState({showNewQRAccessory: false})}
                     />
                 </Modal>
-                <ProfileView name={this.state.name}/>
-                <View style={{ flexDirection: 'row', height: '10%' }}>
+                <View style={{ flexDirection: 'row', height: '10%', width: '100%' }}>
                     <View style={{ height: '100%', width: '35%', alignItems: 'center', justifyContent: 'center' }}>
                         <Icon onPress={() => this.props.navigation.pop()}name="chevron-left" size={20} color="black" solid />
                     </View>
@@ -188,13 +189,13 @@ const styles = {
         margin: 0
     },
     button: {
-        borderRadius: 12,
-        borderWidth: 1,
-        width: '50%',
-        height: '50%',
-        borderColor: 'black',
+        borderRadius: 20,
+        backgroundColor: 'white',
+        width: 150,
+        height: 150,
         alignItems: 'center',
         justifyContent: 'center',
+        elevation: 5
     },
     buttonText: {
         fontSize: 12,
@@ -214,5 +215,11 @@ const styles = {
         justifyContent: 'space-around',
         alignItems: 'center'
     },
+    header: {
+        fontSize: 20,
+        fontFamily: "Poppins-Bold",
+        textAlign: 'center',
+        color: '#424242'
+    }
 };
 export default Accessories;

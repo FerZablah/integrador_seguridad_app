@@ -5,7 +5,6 @@ import ContactsTable from './contactsTable';
 import NewContact from './newContact';
 import firebase from 'react-native-firebase';
 import axios from 'axios';
-import ProfileView from './profileView';
 class Contacts extends Component {
     constructor(props) {
         super(props);
@@ -20,9 +19,12 @@ class Contacts extends Component {
         };
     }
     addUser(user) {
+        console.log(user);
         const newContacts = this.state.contacts;
         newContacts.push(user);
         this.setState({ contacts: newContacts });
+        this.searchContacts(this.state.searchTxt);
+        console.log(this.state);
     }
     modifyUser(newUser, oldUser) {
         let newContacts = this.state.contacts;
@@ -37,12 +39,14 @@ class Contacts extends Component {
         this.searchContacts(this.state.searchTxt);
     }
     deleteUser(user){
+        console.log(user);
         axios.delete(BASE_URL +'contacto/'+ user.telefono).then((res) => {
             let newContacts = this.state.contacts;    
             newContacts = newContacts.filter((obj) => {
                 return obj.telefono !== user.telefono;
             });
             this.setState({ contacts: newContacts });
+            this.searchContacts(this.state.searchTxt);
         }).catch((e) => {
             console.log(e);
         })
@@ -113,13 +117,13 @@ class Contacts extends Component {
             );
         }
         return (
-            <View style={{ backgroundColor: 'white', flex: 1 }}>
+            <View style={{ flex: 1, paddingHorizontal: 30, paddingTop: 30 }}>
                 <Modal
                     animationType="slide"
                     transparent={false}
                     visible={this.state.showNewUser}
                     onRequestClose={() => {
-                        Alert.alert('Modal has been closed.');
+                        this.setState({ showNewUser: false })
                     }}
                 >
                     <NewContact
@@ -129,29 +133,26 @@ class Contacts extends Component {
                         userToModify={this.state.userToModify ? this.state.userToModify : null}
                     />
                 </Modal>
-                <ProfileView name={this.state.name}/>
                 <View style={{ flexDirection: 'row', height: '10%' }}>
-                    <View style={{ height: '100%', width: '17%', alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={{ height: '100%', width: '22%', alignItems: 'center', justifyContent: 'center' }}>
                         <Icon onPress={() => this.props.navigation.pop()} name="chevron-left" size={20} color="black" solid />
                     </View>
-                    <View style={{ alignItems: 'center', justifyContent: 'center', marginLeft: 0 }}>
+                    <View style={{ alignItems: 'center', width: 200, justifyContent: 'center', marginBottom: 15 }}>
                         <Text style={styles.header}>
                             Contactos de Emergencia
                         </Text>
                     </View>
                 </View>
                 <View style={{ flexDirection: 'row', height: '10%', alignItems: 'center', justifyContent: 'space-around' }}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder={'Buscar en tus contactos...'}
-                        keyboardType={this.props.keyboardType}
-                        onChangeText={(txt) => this.searchContacts(txt)}
-                        secureTextEntry={this.props.secureTextEntry}
-                    />
-                    <View style={styles.buttonView}>
-                        <TouchableNativeFeedback>
-                            <Icon name="search" size={20} color="black" solid />
-                        </TouchableNativeFeedback>
+                     <View style={styles.searchField}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={'Buscar en tus contactos...'}
+                            keyboardType={this.props.keyboardType}
+                            onChangeText={(txt) => this.searchContacts(txt)}
+                            secureTextEntry={this.props.secureTextEntry}
+                        />
+                        <Icon name="search" size={20} color="#BABABA" />
                     </View>
                     <View style={styles.buttonView}>
                         <TouchableNativeFeedback onPress={() => this.setState({ showNewUser: true })}>
@@ -165,29 +166,43 @@ class Contacts extends Component {
     }
 }
 const styles = {
+    searchField: {
+        width: '80%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        borderColor: '#BABABA',
+        borderWidth: 1,
+        backgroundColor: '#F7F7F7',
+        paddingRight: 5,
+        marginRight: 9
+    },
     input: {
-        width: 250,
-        fontSize: 13,
+        width: '80%',
+        fontSize: 12,
         fontFamily: "Poppins-Regular",
-        color: '#191919',
         textAlign: 'left',
         height: 50,
         padding: 10,
-        borderWidth: 1,
-        borderColor: '#E4E4E4',
-        borderRadius: 12,
-        backgroundColor: '#F7F7F7'
+        backgroundColor: '#F7F7F7',
+        color: '#424242',
+        borderWidth: 0
     },
     buttonView: {
         height: '70%',
         width: 50,
         borderRadius: 10,
-        borderColor: '#E4E4E4',
-        borderWidth: 2,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white'
-
+        backgroundColor: 'white',
+        elevation: 8
+    },
+    header: {
+        fontSize: 20,
+        fontFamily: "Poppins-Bold",
+        textAlign: 'center',
+        color: '#424242'
     }
 };
 

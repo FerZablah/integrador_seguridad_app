@@ -2,30 +2,49 @@ import React, { Component } from "react";
 import { View, Text, TouchableNativeFeedback, AsyncStorage } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import mapStyle from '../assets/mapStyle.json'
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from "react-native-modal";
 import firebase from 'react-native-firebase';
+import { secret, client } from './foursquare';
+import axios from 'axios';
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showLogout: false,
-      name: ''
+      name: '',
+      locationText: ''
     };
   }
   componentDidMount(){
+    
     AsyncStorage.getItem('name', (err, val) => {
         this.setState({ name: val });
     })
   }
   componentWillMount() {
+    
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
+        });
+        axios({
+          url: `https://api.foursquare.com/v2/venues/search?ll=${position.coords.latitude},${position.coords.longitude}&client_id=${client}&client_secret=${secret}&v=20190905`,
+          method: 'get'
+        }).then((res) => {
+          let found = false;
+          res.data.response.venues.forEach(venue => {
+            if(venue.location.city && venue.location.country && !found){
+              const city = venue.location.city;
+              const country = venue.location.country;
+              const locationText = (city ? city + ', ' : '') + (country ? country : '');
+              this.setState({locationText});
+              found = true;
+            }
+          })
         });
       },
       (error) => this.setState({ error: error.message }),
@@ -66,11 +85,8 @@ class Home extends Component {
         </Modal>
         <TouchableNativeFeedback onPress={() => this.setState({ showLogout: true })}>
           <View style={styles.profileView}>
-              <View style={styles.iconContainer}>
-                <Icon name="user" size={15} color="black" solid />
-              </View>
               <Text style={styles.nameText}>{this.state.name}</Text>
-              <Text style={styles.locationText}>Monterrey, México</Text>
+              <Text style={styles.locationText}>{this.state.locationText}</Text>
           </View>
         </TouchableNativeFeedback>
         <View style={styles.buttonsViews}>
@@ -103,22 +119,22 @@ const styles = {
   },
   profileView: {
     position: 'absolute',
-    height: 100,
-    width: 100,
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    flex: 1,
+    backgroundColor: 'white',
     alignSelf: 'center',
     marginTop: 30,
     zIndex: 10,
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    elevation: 15,
+    borderRadius: 20,
+    padding: 20
   },
   nameText: {
     textAlign: 'center',
     fontSize: 12,
     fontFamily: "Poppins-Regular",
-    color: '#191919',
-    padding: 0,
-    margin: 0
+    color: '#191919'
   },
   locationText: {
     textAlign: 'center',
@@ -158,14 +174,17 @@ const styles = {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingHorizontal: 30
   },
   button: {
-    borderRadius: 15,
-    borderWidth: 1,
-    height: '60%',
+    borderRadius: 20,
+    backgroundColor: 'white',
+    height: 150,
+    width: 150,
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 6,
   },
   popButton: {
     borderRadius: 15,

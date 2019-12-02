@@ -5,9 +5,9 @@ class ContactsTableCell extends Component {
     render(){
         return(
             <View style={styles.root}>
-                <Text style={styles.text}>{this.props.name}</Text>
-                <Text style={styles.text}>{this.props.phone}</Text>
-                <Icon name="user-edit" onPress={this.props.modifyClicked} size={20} color="black" solid />
+                <Text style={[styles.text, {width: '39%'}]}>{this.props.name}</Text>
+                <Text style={[styles.text, {width: '39%'}]}>{this.props.phone}</Text>
+                <Icon name="user-edit" style={{width: '13%'}}onPress={this.props.modifyClicked} size={20} color="black" solid />
                 <Icon name="trash-alt" onPress={this.props.deleteClicked} size={20} color="black" solid />
             </View>
         );
@@ -18,11 +18,9 @@ const styles = {
         height: 50,
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'space-around',
         flexDirection: 'row'
     },
     text: {
-        width: '30%',
         textAlign: 'left',
         fontFamily: "Poppins-Regular",
         color: '#191919',

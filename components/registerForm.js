@@ -124,9 +124,6 @@ class RegisterForm extends Component {
                         />
                     </View>
                 </KeyboardAwareScrollView>
-                <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Login')}>
-                    <Text>¿Ya estas registrado? Inicia sesión</Text>
-                </TouchableNativeFeedback>
                 <View style={styles.buttonView}> 
                     <TouchableNativeFeedback onPress={this.signup.bind(this)}>
                         <View style={styles.button}>   
@@ -134,17 +131,37 @@ class RegisterForm extends Component {
                         </View>
                     </TouchableNativeFeedback>
                 </View>
+                <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('Login')}>
+                    <Text style={styles.loginText.root}>
+                                <Text style={styles.loginText.question}>{'¿Ya tienes cuenta? '}</Text>
+                                <Text style={[styles.loginText.question, {textDecorationLine: 'underline'}]}>{'Inicia sesión aquí'}</Text>
+                            </Text>
+                </TouchableNativeFeedback>
             </View>
         );
     }
 }
 const styles = {
     root: {
-        padding: 30,
+        paddingHorizontal: 40,
+        paddingTop: 50,
+        paddingBottom: 20,
         alignItems: 'center',
         backgroundColor: 'white',
         flex: 1,
         justifyContent: 'flex-start'
+    },
+    loginText: {
+        root: {
+            textAlign: 'center',
+            marginTop: 25
+        },
+        question: { 
+            fontSize: 12,
+            fontFamily: "Poppins-Regular",
+            color: '#191919',
+            backgroundColor: 'transparent'
+        }
     },
     button: {
         borderRadius: 12,

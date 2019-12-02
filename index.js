@@ -14,6 +14,7 @@ import Accessories from './components/accessories';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import Startup from './components/startup';
+import ContactList from './components/contactList';
 const AppNavigator = createStackNavigator({
     Startup: {
         screen: Startup,
@@ -44,7 +45,7 @@ const AppNavigator = createStackNavigator({
   });
 
 AppRegistry.registerComponent(appName, () => createAppContainer(AppNavigator));
-//AppRegistry.registerComponent(appName, () => QRCamera);
+//AppRegistry.registerComponent(appName, () => ContactList);
 
 
 //adb shell input text "RR"

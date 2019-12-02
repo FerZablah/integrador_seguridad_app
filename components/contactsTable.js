@@ -17,7 +17,7 @@ class ContactsTable extends Component {
         return(
             <View style={{ flex: 1}}>
                 <View style={{flexDirection: 'row'}}>
-                    <Text style={{width: '40%', marginLeft: '4%', fontFamily: "Poppins-Bold", color: '#191919'}}>Nombre</Text>
+                    <Text style={{width: '40%', fontFamily: "Poppins-Bold", color: '#191919'}}>Nombre</Text>
                     <Text style={{fontFamily: "Poppins-Bold", color: '#191919'}}>Teléfono</Text>
                 </View>
                 {

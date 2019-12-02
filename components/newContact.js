@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableNativeFeedback } from 'react-native';
+import { View, Text, TouchableNativeFeedback, Modal } from 'react-native';
 import OverlayInput from './overlayInput';
 import firebase from 'react-native-firebase';
 import axios from 'axios';
 import BASE_URL from '../base_url.js';
+import ContactList from './contactList';
 
 class NewContact extends Component {
     constructor(props) {
@@ -16,7 +17,7 @@ class NewContact extends Component {
         }
         else{
             this.state = {
-
+                showContactsList: false
             }
         }
     }
@@ -50,8 +51,31 @@ class NewContact extends Component {
         })
     }
     render(){
+        let importContact = (
+            <TouchableNativeFeedback onPress={() => this.setState({showContactsList: true})}>
+                <Text style={{marginTop: 30}}>Importar de contactos</Text>
+            </TouchableNativeFeedback>
+        );
+        if(this.props.userToModify){
+            importContact = null;
+        }
         return(
             <View style={{ flex: 1, alignItems: 'center', padding: 10}}>
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.showContactsList}
+                    onRequestClose={() => {
+                        this.setState({ showContactsList: false })
+                    }}
+                >
+                    <ContactList    
+                        selectContact={(contact) => {
+                            this.setState({name: contact.name, phone: contact.phone});
+                        }}
+                        close={() => this.setState({ showContactsList: false})}
+                    />
+                </Modal>
                 <Text style={styles.header}>
                     Nuevo contacto de emergencia
                 </Text>
@@ -92,6 +116,8 @@ class NewContact extends Component {
                         </TouchableNativeFeedback>
                     </View>
                 </View>
+                {importContact}
+
             </View>
         );
     }
